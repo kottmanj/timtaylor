@@ -1,10 +1,10 @@
 import tequila as tq
+import json
 
 def run_example():
     
-    mol = tq.chemistry.Molecule(geometry="he 0.0 0.0 0.0", basis_set="6-31G")
-    U = mol.make_upccgsd_ansatz()
-    H = mol.make_hamiltonian()
+    U = tq.gates.Ry(angle="a", target=0)
+    H = tq.paulis.X(0)
     E = tq.ExpectationValue(U=U, H=H)
     result = tq.minimize(method="bfgs", objective=E, gradient="2-point")
 
@@ -15,7 +15,7 @@ def run_example():
     message_dict["schema"] = "message"
     message_dict["energy"] = result.energy
     message_dict["iterations"] = len(result.history.extract_energies())
-    message_dict["angles"] = result.angles
+    message_dict["angles"] = {k.name:v for k,v in result.variables.items()}
 
     with open("result.json",'w') as f:
         f.write(json.dumps(message_dict, indent=2)) # Write message to file as this will serve as output artifact
