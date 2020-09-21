@@ -1,7 +1,6 @@
 error = None
 try:
     import tequila as tq
-    from .example import run_example
 except Exception as E:
     error = E
 
@@ -13,5 +12,3 @@ def show_me():
     else:
         print("did not work out")
         print(error)
-
-
